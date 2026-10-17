@@ -1,0 +1,21 @@
+name: ecommerce
+
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: ecommerce
+      POSTGRES_USER: analyst
+      POSTGRES_PASSWORD: analyst
+    ports:
+      - "5434:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U analyst -d ecommerce"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  pgdata:
