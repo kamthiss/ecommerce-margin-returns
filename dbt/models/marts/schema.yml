@@ -73,6 +73,9 @@ models:
   - name: mart_channel_month
     description: Одна строка — месяц заказа × канал, только неотменённые заказы, возвраты по месяцу заказа.
 
+  - name: mart_category_channel_month
+    description: Одна строка — месяц заказа × категория × канал, только неотменённые заказы, возвраты по месяцу заказа.
+
   - name: mart_returns_by_return_month
     description: Одна строка — месяц возврата × категория × канал.
 
