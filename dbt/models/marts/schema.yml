@@ -1,0 +1,83 @@
+version: 2
+
+models:
+  - name: dim_products
+    description: Одна строка — товар.
+    columns:
+      - name: product_id
+        data_tests: [unique, not_null]
+
+  - name: dim_channels
+    description: Одна строка — канал продаж.
+    columns:
+      - name: channel
+        data_tests: [unique, not_null]
+
+  - name: dim_customers
+    description: Одна строка — клиент.
+    columns:
+      - name: customer_id
+        data_tests: [unique, not_null]
+
+  - name: fct_orders
+    description: Одна строка — заказ.
+    columns:
+      - name: order_id
+        data_tests: [unique, not_null]
+      - name: customer_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_customers')
+                field: customer_id
+      - name: channel
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_channels')
+                field: channel
+
+  - name: fct_order_lines
+    description: Одна строка — позиция заказа.
+    columns:
+      - name: order_item_id
+        data_tests: [unique, not_null]
+      - name: order_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('fct_orders')
+                field: order_id
+      - name: product_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_products')
+                field: product_id
+
+  - name: fct_returns
+    description: Одна строка — событие возврата позиции.
+    columns:
+      - name: return_id
+        data_tests: [unique, not_null]
+      - name: order_item_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('fct_order_lines')
+                field: order_item_id
+
+  - name: mart_category_month
+    description: Одна строка — месяц заказа × категория, только неотменённые заказы, возвраты по месяцу заказа.
+
+  - name: mart_channel_month
+    description: Одна строка — месяц заказа × канал, только неотменённые заказы, возвраты по месяцу заказа.
+
+  - name: mart_returns_by_return_month
+    description: Одна строка — месяц возврата × категория × канал.
+
+  - name: mart_kpi_month
+    description: Одна строка — месяц заказа.
+    columns:
+      - name: order_month
+        data_tests: [unique, not_null]
