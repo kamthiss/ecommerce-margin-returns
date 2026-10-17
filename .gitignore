@@ -2,3 +2,7 @@
 data/
 __pycache__/
 .ipynb_checkpoints/
+dbt/target/
+dbt/logs/
+dbt/dbt_packages/
+dbt/.user.yml

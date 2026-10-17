@@ -1,0 +1,78 @@
+version: 2
+
+models:
+  - name: stg_customers
+    description: Одна строка — клиент.
+    columns:
+      - name: customer_id
+        data_tests: [unique, not_null]
+
+  - name: stg_products
+    description: Одна строка — товар.
+    columns:
+      - name: product_id
+        data_tests: [unique, not_null]
+
+  - name: stg_channels
+    description: Одна строка — канал продаж.
+    columns:
+      - name: channel
+        data_tests: [unique, not_null]
+
+  - name: stg_orders
+    description: Одна строка — заказ.
+    columns:
+      - name: order_id
+        data_tests: [unique, not_null]
+      - name: customer_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_customers')
+                field: customer_id
+      - name: channel
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_channels')
+                field: channel
+      - name: status
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [delivered, cancelled]
+
+  - name: stg_order_items
+    description: Одна строка — позиция заказа.
+    columns:
+      - name: order_item_id
+        data_tests: [unique, not_null]
+      - name: order_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_orders')
+                field: order_id
+      - name: product_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_products')
+                field: product_id
+
+  - name: stg_returns
+    description: Одна строка — событие возврата позиции.
+    columns:
+      - name: return_id
+        data_tests: [unique, not_null]
+      - name: order_item_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_order_items')
+                field: order_item_id
+      - name: condition
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [restocked, damaged]
